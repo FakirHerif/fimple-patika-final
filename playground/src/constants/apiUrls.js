@@ -1,8 +1,8 @@
 const apiUrls = {
-  TestDefinitionsApi: 'Playground/TestDefinitions',
+/*   TestDefinitionsApi: 'Playground/TestDefinitions',
   TestDefinitionsByIdApi: 'Playground/TestDefinitions/{0}',
   MetaDataCountries: 'MetaData/Countries',
-  MetaDataCountriesById: 'MetaData/Countries/{0}',
+  MetaDataCountriesById: 'MetaData/Countries/{0}', */
 };
 
 export { apiUrls };

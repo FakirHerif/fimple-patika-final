@@ -37,26 +37,17 @@ const SampleList = (props) => {
 
   const getDataSource = (data) => {
     // executeGet({ url: apiUrls.TestDefinitionsApi, setStateDelegate: setDataSource });
-    // executeGet({ url: `https://api.sampleapis.com/cartoons/cartoons2D` }).then((response) => {
-    //   if (response.Value) {
-    //     setDataSource(response.Value);
-    //   }
-    // });
 
-    if (data?.Id) {
-      executeGet({ url: stringFormat(apiUrls.MetaDataCountriesById, data.Id) }).then((response) => {
-        if (response.Value) {
-          setDataSource([response.Value]);
-        }
-      });
-    } else {
-      executeGet({ url: apiUrls.MetaDataCountries }).then((response) => {
-        if (response.Value) {
-          setDataSource(response.Value);
-        }
-      });
-    }
-  };
+     executeGet({ fullURL: `https://sendform.fly.dev/api/informations`, enqueueSnackbarOnError: false })
+     .then((response) => {
+        console.log(response.data);
+        setDataSource(response.data);
+     })
+       .catch((error) => {
+        console.log("Error");
+        console.error('Error fetching data:', error);
+       });
+     };
 
   const deleteData = (id) => {
     if (id) {
