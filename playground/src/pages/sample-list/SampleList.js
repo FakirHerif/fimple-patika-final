@@ -57,16 +57,22 @@ const SampleList = (props) => {
        });
      };
 
-  const deleteData = (id) => {
-    if (id) {
-
-      executeDelete({ url: stringFormat(apiUrls.sampleApi, id) }).then((response) => {
-        if (response.Success && response.Value) {
-          getDataSource();
-        }
-      });
-    }
-  };
+     const deleteData = (id) => {
+      console.log(id)
+      if (deleteClicked) {
+        executeDelete({ fullURL: `https://sendform.fly.dev/api/informations/${id}`, data: {}, enqueueSnackbarOnError: false })
+          .then(() => {
+            getDataSource();
+            console.log("başarılı")
+          })
+          .catch((error) => {
+            console.error('Error deleting data:', error);
+            console.error('Response data:', id); // Log the response data for debugging
+          });
+      } else {
+        console.log("Error: apiResponse is not defined");
+      }
+    };
 
   const columns = useMemo(() => {
     return [
@@ -114,8 +120,8 @@ const SampleList = (props) => {
   }, []);
 
   const deleteClicked = useCallback((id, data) => {
-    data && deleteData(data.Id);
-  }, []);
+    data && deleteData(data.id);
+  }, [deleteData]);
 
   const gridActionList = useMemo(
     () => [
