@@ -1,6 +1,18 @@
 {
-  "Official state name": "Official state name",
   "Sample add": "Sample add",
   "Sample edit": "Sample edit",
-  "Sample text": "Sample text"
+  "Sample text": "Sample text",
+  "First Name": "First Name",
+  "Last Name": "Last Name",
+  "Age": "Age",
+  "Identification No": "Identification No",
+  "Phone Number": "Phone Number",
+  "Town": "Town",
+  "City": "City",
+  "Address": "Address",
+  "Title": "Title",
+  "Content": "Content",
+  "Reference Id": "Reference Id",
+  "Status": "Status",
+  "Created Date": "Created Date"
 }

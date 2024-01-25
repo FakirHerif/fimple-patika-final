@@ -1,6 +1,18 @@
 {
-  "Official state name": "Resmi devlet adı",
   "Sample add": "Örnek ekle",
   "Sample edit": "Örnek düzenle",
-  "Sample text": "Örnek metin"
+  "Sample text": "Örnek metin",
+  "First Name": "İsim",
+  "Last Name": "Soyisim",
+  "Age": "Yaş",
+  "Identification No": "Kimlik No",
+  "Phone Number": "Telefon No",
+  "Town": "İl",
+  "City": "İlçe",
+  "Address": "Adres",
+  "Title": "Başlık",
+  "Content": "İçerik",
+  "Reference Id": "Referans No",
+  "Status": "Durum",
+  "Created Date": "Oluşturulma Tarihi"
 }

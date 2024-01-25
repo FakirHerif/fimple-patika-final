@@ -41,8 +41,16 @@ const SampleList = (props) => {
      executeGet({ fullURL: `https://sendform.fly.dev/api/informations`, enqueueSnackbarOnError: false })
      .then((response) => {
         console.log(response.data);
+/*         if (response.data) {
+          response.data.forEach(item => {
+            console.log('First Name:', item.firstName);
+            console.log('Last Name:', item.lastName);
+          }); */
         setDataSource(response.data);
-     })
+/*      } else {
+      console.log('API Response does not have the expected structure.');
+     } */
+    })
        .catch((error) => {
         console.log("Error");
         console.error('Error fetching data:', error);
@@ -62,10 +70,21 @@ const SampleList = (props) => {
 
   const columns = useMemo(() => {
     return [
-      { name: 'Id', header: translate('Id'), visible: false },
-      { name: 'Code', header: translate('Code') },
-      { name: 'Name', header: translate('Name') },
-      { name: 'OfficialStateName', header: translate('Official state name'), }
+      { name: 'id', header: translate('Id'), visible: true },
+      { name: 'firstName', header: translate('First Name') },
+      { name: 'lastName', header: translate('Last Name') },
+      { name: 'age', header: translate('Age') },
+      { name: 'identificationNo', header: translate('Identification No'), },
+      { name: 'phone', header: translate('Phone Number') },
+      { name: 'town', header: translate('Town') },
+      { name: 'city', header: translate('City') },
+      { name: 'address', header: translate('Address') },
+      { name: 'title', header: translate('Title') },
+      { name: 'content', header: translate('Content') },
+      { name: 'referenceID', header: translate('Reference Id') },
+      { name: 'status', header: translate('Status') },
+      { name: 'createdDate', header: translate('Created Date') },
+
     ];
   }, []);
 
