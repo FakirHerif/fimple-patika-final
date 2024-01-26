@@ -8,3 +8,5 @@ const generateUIKey = () => {
 }
 
 module.exports = { generateUIKey };
+
+console.log('Hello from utils.js');

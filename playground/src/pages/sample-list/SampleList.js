@@ -9,7 +9,7 @@ import {
   scopeKeys,
   stringFormat,
 } from 'component/base';
-import { Card, DataGrid, Filter, Input, BasePage, withFormPage } from 'component/ui';
+import { Card, DataGrid, Filter, Input, BasePage, withFormPage, Select } from 'component/ui';
 
 import SampleDefinition from '../sample-definition';
 import { apiUrls } from '../../constants';
@@ -46,7 +46,13 @@ const SampleList = (props) => {
             console.log('First Name:', item.firstName);
             console.log('Last Name:', item.lastName);
           }); */
-        setDataSource(response.data);
+          if (data && data.status) {
+            const filteredData = response.data.filter((item) => item.status === data.status);
+            setDataSource(filteredData);
+            console.log(filteredData);
+          } else {
+            setDataSource(response.data);
+          }
 /*      } else {
       console.log('API Response does not have the expected structure.');
      } */
@@ -153,11 +159,19 @@ const SampleList = (props) => {
 
   return (
     <BasePage {...props} onActionClick={onActionClick}>
-      <Filter onFilter={(data) => getDataSource(data)}>
-        <Input
-          name={'Id'}
-          label={translate('Id')}
+      <Filter
+        onFilter={(data) => getDataSource(data)}
+        onFilterReset={(data) =>getDataSource(data)}
+      >
+        <Select
+          name={'status'}
+          label={translate('Status')}
           primaryFilter
+          datasource={[
+            { label: 'çözüldü', value: 'çözüldü' },
+            { label: 'iptal edildi', value: 'iptal edildi' },
+            { label: 'cevap bekliyor', value: 'cevap bekliyor' },
+          ]}
         />
       </Filter>
       <Card

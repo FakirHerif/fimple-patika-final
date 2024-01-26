@@ -4,6 +4,7 @@ import { NotFound } from 'component/ui';
 
 const SampleDefinition = lazy(() => import('./pages/sample-definition'));
 const SampleList = lazy(() => import('./pages/sample-list'));
+const Abc = lazy(() => import('./pages/abc'));
 
 export default [
   {
@@ -19,6 +20,13 @@ export default [
     path: '/sample-list',
     component: SampleList,
     uiKey: 'u24bddfade6',
+  },
+  {
+    name: 'abc',
+    module: '/playground',
+    path: '/abc',
+    component: Abc,
+    uiKey: 'u44dee8e3b3',
   },
   {
     name: 'NotFound',
