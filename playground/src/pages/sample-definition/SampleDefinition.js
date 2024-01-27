@@ -1,130 +1,107 @@
-import React, { useEffect, useRef, useState, useMemo } from 'react';
+import React, { useState } from 'react';
 
 import {
-  useAuthenticationContext,
-  useFiProxy,
-  useSnackbar,
   useTranslation,
-  useTransactionContext,
   scopeKeys,
-  stringFormat
 } from 'component/base';
 import {
   BasePage,
   Card,
-  Checkbox,
   Input,
-  Select,
-  SelectEnum,
-  DatePicker,
   withFormPage,
+  Alert,
 } from 'component/ui';
 
-import { apiUrls } from '../../constants';
-
-/**
- * UI unique identifier meta-data.
- */
 const uiMetadata = {
   moduleName: 'playground',
   uiKey: 'u7e7c13a017',
 };
 
-const SampleDefinition = ({ close, isBpm, Id, ...rest }) => {
+const SampleDefinition = ({ close, Id, onSaveSuccess, ...rest }) => {
   const { translate } = useTranslation();
-  const { tenant, user } = useAuthenticationContext();
-  const { enqueueSnackbar } = useSnackbar();
+  const [alertInfo, setAlertInfo] = useState(null);
 
-  const [dataModel, setDataModel] = useState({});
+  const [dataModel, setDataModel] = useState({
+    firstName: '',
+    lastName: '',
+    age: '',
+    identificationNo: '',
+    address: '',
+    city: '',
+    town: '',
+    phone: '',
+    title: '',
+    content: '',
+    informationsOwner: null,
+    attachments: null,
+  });
 
-  const nameRef = useRef();
-  const codeRef = useRef();
-  const descriptionRef = useRef();
-  const isActiveRef = useRef(false);
-
-  const { executeGet, executePost, executePut } = useFiProxy();
-
-  useEffect(() => {
-    Id && getSampleData(Id);
-  }, []);
-
-  const filledState = (dataContract) => {
-    if (dataContract) {
-      setDataModel(dataContract);
-    }
+  const jsonData = {
+    firstName: dataModel.firstName,
+    lastName: dataModel.lastName,
+    age: parseInt(dataModel.age, 10),
+    identificationNo: parseInt(dataModel.identificationNo, 10),
+    address: dataModel.address,
+    city: dataModel.city,
+    town: dataModel.town,
+    phone: dataModel.phone,
+    title: dataModel.title,
+    content: dataModel.content,
+    informationsOwner: null,
+    attachments: null,
   };
 
-  const getSampleData = (Id) => {
-    // executeGet({
-    //   url: stringFormat(apiUrls.TestDefinitionsByIdApi, Id),
-    //   baseURL: 'http://localhost:10047/'
-    // }).then((response) => {
-    //   if (response.Success) {
-    //     filledState(response.Value);
-    //   }
-    // });
+  const formData = new FormData();
+  formData.append('jsonData', JSON.stringify(jsonData));
 
-    executeGet({ url: stringFormat(apiUrls.MetaDataCountriesById, Id) }).then((response) => {
-      if (response.Value) {
-        setDataModel(response.Value);
-      }
-    });
-  };
-
-  const onValueChanged = (field, value) => {
-    setDataModel({ ...dataModel, [field]: value });
-  };
-
-  const onActionClick = (action) => {
+  const onActionClick = async (action) => {
     if (action.commandName === 'Save') {
-      if (Id > 0) {
-        executePut({
-          url: apiUrls.Api + Id,
-          data: {
-            ...dataModel,
-            Name: nameRef.current.value,
-            Code: codeRef.current.value,
-            Description: descriptionRef.current.value,
-            IsActive:
-              isActiveRef.current && isActiveRef.current.value ? true : false,
-            BeginDate: dataModel.BeginDate,
-            EndDate: dataModel.EndDate,
-          },
-        }).then((response) => {
-          if (response.Success) {
-            close();
-          }
+      try {
+        console.log('Data to be sent:', dataModel);
+
+        const response = await fetch('https://sendform.fly.dev/api/informations', {
+          method: 'POST',
+          body: formData,
         });
-      } else {
-        const data = {
-          ...dataModel,
-          Name: nameRef.current.value,
-          Code: codeRef.current.value,
-          Description: descriptionRef.current.value,
-          IsActive: isActiveRef.current.value ? true : false,
-          BeginDate: dataModel.BeginDate,
-          EndDate: dataModel.EndDate,
-        };
-        close(data);
-        // executePost({
-        //   url: apiUrls.TestDefinitionsApi,
-        //   baseURL: 'http://localhost:10047/',
-        //   data: {
-        //     ...dataModel,
-        //     Name: nameRef.current.value,
-        //     Code: codeRef.current.value,
-        //     Description: descriptionRef.current.value,
-        //     IsActive: isActiveRef.current.value ? true : false,
-        //     BeginDate: dataModel.BeginDate,
-        //     EndDate: dataModel.EndDate,
-        //   },
-        // }).then((response) => {
-        //   if (response.Success) {
-        //     close(true);
-        //   }
-        // });
+  
+        const responseData = await response.json();
+  
+        if (response.ok) {
+          console.log('Başarıyla kaydedildi');
+          console.log('Response status:', response.status);
+          console.log('Response data:', responseData);
+          const referenceID = responseData && responseData.referenceID;
+          setAlertInfo({
+            message: referenceID
+              ? `Form Sent Successfully! Your ReferenceID: ${referenceID}`
+              : 'Form Sent Successfully!',
+            severity: 'success',
+          });
+          setDataModel({
+            firstName: '',
+            lastName: '',
+            age: '',
+            identificationNo: '',
+            address: '',
+            city: '',
+            town: '',
+            phone: '',
+            title: '',
+            content: '',
+            informationsOwner: null,
+            attachments: null,
+          })
+          onSaveSuccess();
+        } else {
+          console.error('Error in response:', responseData);
+          console.log('Response status:', response.status);
+          console.error('Error Reasons:', responseData.Reasons);
+          setAlertInfo({ message: 'Form Submission Failed', severity: 'error' });
+        }
+      } catch (error) {
+        console.error('Error while creating a new record:', error);
       }
-    } else if (action.commandName == 'Cancel') {
+    } else if (action.commandName === 'Cancel') {
       close && close(false);
     }
   };
@@ -138,72 +115,81 @@ const SampleDefinition = ({ close, isBpm, Id, ...rest }) => {
         { name: 'Save', scopeKey: scopeKeys.Create_Loan },
       ]}
     >
+      {alertInfo && <Alert message={alertInfo.message} severity={alertInfo.severity} />}
       <Card scopeKey={scopeKeys.Create_Loan}>
         <Input
           xs={6}
           required
-          ref={nameRef}
-          label={translate('Name')}
-          value={dataModel.Name}
+          label={translate('First Name')}
+          value={dataModel.firstName}
+          onChange={(value) => handleInputChange('firstName', value)}
+          />
+        <Input
+          xs={6}
+          required
+          label={translate('Last Name')}
+          value={dataModel.lastName}
+          onChange={(value) => handleInputChange('lastName', value)}
+        />
+        <Input
+          xs={6}
+          label={translate('Age')}
+          value={dataModel.age}
+          onChange={(value) => handleInputChange('age', value)}
+        />
+        <Input
+          xs={6}
+          label={translate('Identification No')}
+          value={dataModel.identificationNo}
+          onChange={(value) => handleInputChange('identificationNo', value)}
         />
         <Input
           xs={6}
           required
-          ref={codeRef}
-          label={translate('Code')}
-          value={dataModel.Name}
+          label={translate('Address')}
+          value={dataModel.address}
+          onChange={(value) => handleInputChange('address', value)}
         />
-        <SelectEnum
+        <Input
           xs={6}
-          name="Category"
-          label={translate('Category')}
-          enumName={'CategoryType'}
-          columns={['Name']}
-          valuePath={'Code'}
-          value={dataModel.Category}
-        />
-        <Select
-          xs={6}
-          name="City"
+          required
           label={translate('City')}
-          datasource={[
-            { name: 'City 1', code: 1 },
-            { name: 'City 2', code: 2 },
-            { name: 'City 3', code: 3 },
-          ]}
-          onChange={(value) => onValueChanged('City', value)}
-          columns={['name']}
-          valuePath={'code'}
-          value={dataModel.Category}
+          value={dataModel.city}
+          onChange={(value) => handleInputChange('city', value)}
         />
-        <DatePicker
-          xs={6}
-          name="BeginDate"
-          label={translate('Begin date')}
-          value={dataModel.BeginDate}
-          onChange={(value) => onValueChanged('BeginDate', value)}
-          views={['year', 'month', 'day']}
-        />
-        <DatePicker
-          xs={6}
-          name="EndDate"
-          label={translate('End date')}
-          value={dataModel.EndDate}
-          onChange={(value) => onValueChanged('EndDate', value)}
-          views={['year', 'month', 'day']}
-        />
-        <Checkbox xs={6} ref={isActiveRef} label={translate('Is active')} />
         <Input
-          xs={12}
+          xs={6}
           required
-          ref={descriptionRef}
-          rows={3}
-          multiline
-          label={translate('Description')}
+          label={translate('Town')}
+          value={dataModel.town}
+          onChange={(value) => handleInputChange('town', value)}
+        />
+        <Input
+          xs={6}
+          label={translate('Phone Number')}
+          value={dataModel.phone}
+          onChange={(value) => handleInputChange('phone', value)}
+        />
+        <Input
+          xs={6}
+          required
+          label={translate('Title')}
+          value={dataModel.title}
+          onChange={(value) => handleInputChange('title', value)}
+        />
+        <Input
+          xs={6}
+          required
+          label={translate('Content')}
+          value={dataModel.content}
+          onChange={(value) => handleInputChange('content', value)}
         />
       </Card>
     </BasePage>
   );
+  function handleInputChange(fieldName, value) {
+    setDataModel({ ...dataModel, [fieldName]: value });
+  }
 };
 
 export default withFormPage(SampleDefinition, { uiMetadata });

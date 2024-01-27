@@ -1,33 +1,25 @@
 import React, { useEffect, useMemo, useState, useCallback } from 'react';
 
 import {
-  useAuthenticationContext,
   useFiProxy,
   useFormManagerContext,
-  useSnackbar,
   useTranslation,
   scopeKeys,
-  stringFormat,
 } from 'component/base';
-import { Card, DataGrid, Filter, Input, BasePage, withFormPage, Select } from 'component/ui';
+import { Card, DataGrid, Filter, BasePage, withFormPage, Select, Alert } from 'component/ui';
 
 import SampleDefinition from '../sample-definition';
-import { apiUrls } from '../../constants';
 
-/**
- * UI unique identifier meta-data.
- */
 const uiMetadata = {
   moduleName: 'playground',
   uiKey: 'u24bddfade6',
 };
 
 const SampleList = (props) => {
-  const { enqueueSnackbar } = useSnackbar();
-  const { tenant } = useAuthenticationContext();
   const { showDialog } = useFormManagerContext();
   const [dataSource, setDataSource] = useState([]);
   const { translate } = useTranslation();
+  const [deleteAlert, setDeleteAlert] = useState(null);
 
   const { executeGet, executeDelete } = useFiProxy();
 
@@ -36,7 +28,6 @@ const SampleList = (props) => {
   }, []);
 
   const getDataSource = (data) => {
-    // executeGet({ url: apiUrls.TestDefinitionsApi, setStateDelegate: setDataSource });
 
      executeGet({ fullURL: `https://sendform.fly.dev/api/informations`, enqueueSnackbarOnError: false })
      .then((response) => {
@@ -69,15 +60,26 @@ const SampleList = (props) => {
         executeDelete({ fullURL: `https://sendform.fly.dev/api/informations/${id}`, data: {}, enqueueSnackbarOnError: false })
           .then(() => {
             getDataSource();
-            console.log("başarılı")
+            setDeleteAlert({ message: 'Data deleted successfully!', severity: 'warning' });
+            setTimeout(() => {
+              setDeleteAlert(null);
+            }, 5000);
           })
           .catch((error) => {
             console.error('Error deleting data:', error);
             console.error('Response data:', id); // Log the response data for debugging
+            setDeleteAlert({ message: 'Failed to delete data!', severity: 'error' });
+            setTimeout(() => {
+              setDeleteAlert(null);
+            }, 5000);
           });
       } else {
         console.log("Error: apiResponse is not defined");
       }
+    };
+
+    const onSaveSuccess = () => {
+      getDataSource();
     };
 
   const columns = useMemo(() => {
@@ -105,14 +107,14 @@ const SampleList = (props) => {
   const addClicked = useCallback(() => {
     showDialog({
       title: translate('Sample add'),
-      content: <SampleDefinition />,
+      content: <SampleDefinition onSaveSuccess={onSaveSuccess}/>,
       callback: (data) => {
         if (data) {
           getDataSource();
         }
       },
     });
-  }, []);
+  }, [onSaveSuccess]);
 
   const editClicked = useCallback((id, data) => {
     data &&
@@ -159,6 +161,7 @@ const SampleList = (props) => {
 
   return (
     <BasePage {...props} onActionClick={onActionClick}>
+            {deleteAlert && <Alert message={deleteAlert.message} severity={deleteAlert.severity} />}
       <Filter
         onFilter={(data) => getDataSource(data)}
         onFilterReset={(data) =>getDataSource(data)}
