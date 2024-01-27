@@ -9,6 +9,7 @@ import {
 import { Card, DataGrid, Filter, BasePage, withFormPage, Select, Alert, CircularProgress } from 'component/ui';
 
 import SampleDefinition from '../sample-definition';
+import { EditSample } from '../sample-edit';
 
 const uiMetadata = {
   moduleName: 'playground',
@@ -20,9 +21,7 @@ const SampleList = (props) => {
   const [dataSource, setDataSource] = useState([]);
   const { translate } = useTranslation();
   const [deleteAlert, setDeleteAlert] = useState(null);
-
   const { executeGet, executeDelete } = useFiProxy();
-
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -122,15 +121,18 @@ const SampleList = (props) => {
   }, [onSaveSuccess]);
 
   const editClicked = useCallback((id, data) => {
+    console.log('Clicked on item with ID:', data.id);
+    console.log('Data:', data);
+
     data &&
       showDialog({
         title: translate('Sample edit'),
-        content: <SampleDefinition data={data} />,
+        content: <EditSample id={data.id} data={data} onSaveSuccess={onSaveSuccess} />,
         callback: () => {
           getDataSource();
         },
       });
-  }, []);
+    }, [getDataSource, onSaveSuccess]);
 
   const deleteClicked = useCallback((id, data) => {
     data && deleteData(data.id);
@@ -199,6 +201,10 @@ const SampleList = (props) => {
           actionList={gridActionList}
           autoSizeAllColumns
           idProperty="Id"
+          onClick={(item) => {
+            console.log('Clicked item:', item);
+            editClicked(item.id, item);
+          }}
         />
         ) : null}
       </Card>

@@ -4,7 +4,7 @@ import { NotFound } from 'component/ui';
 
 const SampleDefinition = lazy(() => import('./pages/sample-definition'));
 const SampleList = lazy(() => import('./pages/sample-list'));
-const Abc = lazy(() => import('./pages/abc'));
+const EditSample = lazy(() => import('./pages/sample-edit'));
 
 export default [
   {
@@ -22,10 +22,10 @@ export default [
     uiKey: 'u24bddfade6',
   },
   {
-    name: 'abc',
+    name: 'EditSample',
     module: '/playground',
-    path: '/abc',
-    component: Abc,
+    path: '/sample-edit',
+    component: EditSample,
     uiKey: 'u44dee8e3b3',
   },
   {
