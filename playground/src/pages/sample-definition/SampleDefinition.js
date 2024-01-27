@@ -10,6 +10,7 @@ import {
   Input,
   withFormPage,
   Alert,
+  InputFormat
 } from 'component/ui';
 
 const uiMetadata = {
@@ -131,15 +132,24 @@ const SampleDefinition = ({ close, Id, onSaveSuccess, ...rest }) => {
           value={dataModel.lastName}
           onChange={(value) => handleInputChange('lastName', value)}
         />
-        <Input
-          xs={6}
+        <InputFormat
+          required
+          xs={2}
           label={translate('Age')}
+          mask={/^[1-9]?[0-9]{1}$|^100$/}
+          name="Number"
+          placeholder="Only number"
           value={dataModel.age}
           onChange={(value) => handleInputChange('age', value)}
         />
-        <Input
-          xs={6}
+        <InputFormat
+          xs={4}
+          required
           label={translate('Identification No')}
+          mask={/^[1-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]{1,2}$|^99999999999$/}
+          minLength={11}
+          name="Number"
+          placeholder="Only number"
           value={dataModel.identificationNo}
           onChange={(value) => handleInputChange('identificationNo', value)}
         />
@@ -164,9 +174,14 @@ const SampleDefinition = ({ close, Id, onSaveSuccess, ...rest }) => {
           value={dataModel.town}
           onChange={(value) => handleInputChange('town', value)}
         />
-        <Input
+        <InputFormat
           xs={6}
+          required
           label={translate('Phone Number')}
+          mask={/^[1-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]{1,2}$|^9999999999$/}
+          minLength={10}
+          name="Number"
+          placeholder="Only number"
           value={dataModel.phone}
           onChange={(value) => handleInputChange('phone', value)}
         />

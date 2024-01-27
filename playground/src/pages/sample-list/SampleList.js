@@ -6,7 +6,7 @@ import {
   useTranslation,
   scopeKeys,
 } from 'component/base';
-import { Card, DataGrid, Filter, BasePage, withFormPage, Select, Alert } from 'component/ui';
+import { Card, DataGrid, Filter, BasePage, withFormPage, Select, Alert, CircularProgress } from 'component/ui';
 
 import SampleDefinition from '../sample-definition';
 
@@ -23,14 +23,18 @@ const SampleList = (props) => {
 
   const { executeGet, executeDelete } = useFiProxy();
 
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     getDataSource();
   }, []);
 
   const getDataSource = (data) => {
+    setLoading(true);
 
      executeGet({ fullURL: `https://sendform.fly.dev/api/informations`, enqueueSnackbarOnError: false })
      .then((response) => {
+      setLoading(false);
         console.log(response.data);
 /*         if (response.data) {
           response.data.forEach(item => {
@@ -51,6 +55,7 @@ const SampleList = (props) => {
        .catch((error) => {
         console.log("Error");
         console.error('Error fetching data:', error);
+        setLoading(false);
        });
      };
 
@@ -161,6 +166,11 @@ const SampleList = (props) => {
 
   return (
     <BasePage {...props} onActionClick={onActionClick}>
+      {loading && (
+        <div style={{ textAlign: 'center', marginTop: '20px' }}>
+          <CircularProgress color="info" size={40} thickness={3.6} />
+        </div>
+      )}
             {deleteAlert && <Alert message={deleteAlert.message} severity={deleteAlert.severity} />}
       <Filter
         onFilter={(data) => getDataSource(data)}
@@ -182,6 +192,7 @@ const SampleList = (props) => {
         showHeader={true}
         actionList={cardActionList}
       >
+        {!loading ? (
         <DataGrid
           dataSource={dataSource}
           columns={columns}
@@ -189,6 +200,7 @@ const SampleList = (props) => {
           autoSizeAllColumns
           idProperty="Id"
         />
+        ) : null}
       </Card>
     </BasePage>
   );
