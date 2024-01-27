@@ -89,6 +89,8 @@ const SampleList = (props) => {
   const columns = useMemo(() => {
     return [
       { name: 'id', header: translate('Id'), visible: true },
+      { name: 'referenceID', header: translate('Reference Id') },
+      { name: 'status', header: translate('Status') },
       { name: 'firstName', header: translate('First Name') },
       { name: 'lastName', header: translate('Last Name') },
       { name: 'age', header: translate('Age') },
@@ -99,8 +101,6 @@ const SampleList = (props) => {
       { name: 'address', header: translate('Address') },
       { name: 'title', header: translate('Title') },
       { name: 'content', header: translate('Content') },
-      { name: 'referenceID', header: translate('Reference Id') },
-      { name: 'status', header: translate('Status') },
       { name: 'createdDate', header: translate('Created Date') },
 
     ];
@@ -128,8 +128,10 @@ const SampleList = (props) => {
       showDialog({
         title: translate('Sample edit'),
         content: <EditSample id={data.id} data={data} onSaveSuccess={onSaveSuccess} />,
-        callback: () => {
+        callback: (data) => {
+          if(data){
           getDataSource();
+        }
         },
       });
     }, [getDataSource, onSaveSuccess]);

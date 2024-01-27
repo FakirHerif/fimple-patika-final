@@ -22,16 +22,16 @@ const EditSample = ({ close, id, onSaveSuccess, ...rest }) => {
   const { translate } = useTranslation();
   const [alertInfo, setAlertInfo] = useState(null);
   const [dataModel, setDataModel] = useState({
-    firstName: '',
-    lastName: '',
-    age: '',
-    identificationNo: '',
-    address: '',
-    city: '',
-    town: '',
-    phone: '',
-    title: '',
-    content: '',
+    firstName: rest.data.firstName,
+    lastName: rest.data.lastName,
+    age: rest.data.age || 0,
+    identificationNo: rest.data.identificationNo || 0,
+    address: rest.data.address,
+    city: rest.data.city,
+    town: rest.data.town,
+    phone: rest.data.phone,
+    title: rest.data.title,
+    content: rest.data.content,
     informationsOwner: null,
     attachments: null,
   });
@@ -99,6 +99,20 @@ const EditSample = ({ close, id, onSaveSuccess, ...rest }) => {
     }));
   };
 
+  useEffect(() => {
+    let timeoutId;
+
+    if (alertInfo && alertInfo.severity === 'success') {
+      timeoutId = setTimeout(() => {
+        close && close(false);
+      }, 1000);
+    }
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [alertInfo, close]);
+
   return (
     <BasePage
       {...rest}
@@ -124,23 +138,21 @@ const EditSample = ({ close, id, onSaveSuccess, ...rest }) => {
           value={dataModel.lastName}
           onChange={(value) => handleInputChange('lastName', value)}
         />
-        <InputFormat
+        <Input
           required
           xs={2}
           label={translate('Age')}
-          mask={/^[1-9]?[0-9]{1}$|^100$/}
-          name="Number"
+          maxLength={2}
           placeholder="Only number"
           value={dataModel.age}
           onChange={(value) => handleInputChange('age', value)}
         />
-        <InputFormat
+        <Input
           xs={4}
           required
           label={translate('Identification No')}
-          mask={/^[1-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]{1,2}$|^99999999999$/}
           minLength={11}
-          name="Number"
+          maxLength={11}
           placeholder="Only number"
           value={dataModel.identificationNo}
           onChange={(value) => handleInputChange('identificationNo', value)}
