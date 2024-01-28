@@ -56,7 +56,7 @@ const onCommentChange = (event) => {
 };
 
   const onActionClick = async (action) => {
-    if (action.commandName === 'Save') {
+    if (action.commandName === 'Send') {
       try {
         console.log('RESPONSEEEEEEEEEEEE', responseText);
         console.log('RESPONSEEEEEEEEEEEE', jsonData);
@@ -153,7 +153,7 @@ const onCommentChange = (event) => {
       onActionClick={onActionClick}
       actionList={[
         { name: 'Cancel' },
-        { name: 'Save', scopeKey: scopeKeys.Create_Loan },
+        { name: 'Send', scopeKey: scopeKeys.Create_Loan },
       ]}
     >
       {alertInfo && <Alert message={alertInfo.message} severity={alertInfo.severity} />}
