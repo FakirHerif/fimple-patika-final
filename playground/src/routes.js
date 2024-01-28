@@ -5,6 +5,7 @@ import { NotFound } from 'component/ui';
 const SampleDefinition = lazy(() => import('./pages/sample-definition'));
 const SampleList = lazy(() => import('./pages/sample-list'));
 const EditSample = lazy(() => import('./pages/sample-edit'));
+const InfoSample = lazy(() => import('./pages/sample-info'));
 
 export default [
   {
@@ -26,6 +27,13 @@ export default [
     module: '/playground',
     path: '/sample-edit',
     component: EditSample,
+    uiKey: 'u44dee8e3b3',
+  },
+  {
+    name: 'InfoSample',
+    module: '/playground',
+    path: '/sample-info',
+    component: InfoSample,
     uiKey: 'u44dee8e3b3',
   },
   {

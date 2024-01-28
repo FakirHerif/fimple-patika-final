@@ -10,6 +10,7 @@ import { Card, DataGrid, Filter, BasePage, withFormPage, Select, Alert, Circular
 
 import SampleDefinition from '../sample-definition';
 import { EditSample } from '../sample-edit';
+import { InfoSample } from '../sample-info';
 
 const uiMetadata = {
   moduleName: 'playground',
@@ -35,11 +36,6 @@ const SampleList = (props) => {
      .then((response) => {
       setLoading(false);
         console.log(response.data);
-/*         if (response.data) {
-          response.data.forEach(item => {
-            console.log('First Name:', item.firstName);
-            console.log('Last Name:', item.lastName);
-          }); */
           if (data && data.status) {
             const filteredData = response.data.filter((item) => item.status === data.status);
             setDataSource(filteredData);
@@ -47,9 +43,6 @@ const SampleList = (props) => {
           } else {
             setDataSource(response.data);
           }
-/*      } else {
-      console.log('API Response does not have the expected structure.');
-     } */
     })
        .catch((error) => {
         console.log("Error");
@@ -140,6 +133,19 @@ const SampleList = (props) => {
     data && deleteData(data.id);
   }, [deleteData]);
 
+  const infoClicked = useCallback((id, data) => {
+    data &&
+      showDialog({
+        title: translate('Sample info'),
+        content: <InfoSample id={data.id} data={data} onSaveSuccess={onSaveSuccess}/>,
+        callback: (data) => {
+          if(data){
+          getDataSource();
+        }
+        },
+      });
+  }, [getDataSource, onSaveSuccess]);
+
   const gridActionList = useMemo(
     () => [
       {
@@ -152,8 +158,13 @@ const SampleList = (props) => {
         onClick: editClicked,
         scopeKey: scopeKeys.Create_Loan,
       },
+      {
+        name: 'detail',
+        onClick: infoClicked,
+        scopeKey: scopeKeys.Create_Loan,
+      },
     ],
-    [deleteClicked, editClicked]
+    [deleteClicked, editClicked, infoClicked]
   );
 
   const cardActionList = useMemo(

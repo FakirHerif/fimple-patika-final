@@ -2,6 +2,7 @@
   "Sample add": "Örnek ekle",
   "Sample edit": "Örnek düzenle",
   "Sample text": "Örnek metin",
+  "Sample info": "Örnek bilgi",
   "First Name": "İsim",
   "Last Name": "Soyisim",
   "Age": "Yaş",
@@ -14,5 +15,10 @@
   "Content": "İçerik",
   "Reference Id": "Referans No",
   "Status": "Durum",
-  "Created Date": "Oluşturulma Tarihi"
+  "Created Date": "Oluşturulma Tarihi",
+  "Response": "Cevap",
+  "Written by": "Yazan",
+  "Date": "Tarih",
+  "Comment": "Yorum",
+  "Delete": "Sil"
 }

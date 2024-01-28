@@ -2,6 +2,7 @@
   "Sample add": "Sample add",
   "Sample edit": "Sample edit",
   "Sample text": "Sample text",
+  "Sample info": "Sample info",
   "First Name": "First Name",
   "Last Name": "Last Name",
   "Age": "Age",
@@ -14,5 +15,10 @@
   "Content": "Content",
   "Reference Id": "Reference Id",
   "Status": "Status",
-  "Created Date": "Created Date"
+  "Created Date": "Created Date",
+  "Response": "Response",
+  "Written by": "Written by",
+  "Date": "Date",
+  "Comment": "Comment",
+  "Delete": "Delete"
 }
