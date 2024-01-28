@@ -153,12 +153,16 @@ const SampleDefinition = ({ close, Id, onSaveSuccess, ...rest }) => {
           value={dataModel.identificationNo}
           onChange={(value) => handleInputChange('identificationNo', value)}
         />
-        <Input
+        <InputFormat
           xs={6}
           required
-          label={translate('Address')}
-          value={dataModel.address}
-          onChange={(value) => handleInputChange('address', value)}
+          label={translate('Phone Number')}
+          mask={/^[1-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]{1,2}$|^9999999999$/}
+          minLength={10}
+          name="Number"
+          placeholder="Only number"
+          value={dataModel.phone}
+          onChange={(value) => handleInputChange('phone', value)}
         />
         <Input
           xs={6}
@@ -174,26 +178,24 @@ const SampleDefinition = ({ close, Id, onSaveSuccess, ...rest }) => {
           value={dataModel.town}
           onChange={(value) => handleInputChange('town', value)}
         />
-        <InputFormat
-          xs={6}
+        <Input
+          xs={12}
           required
-          label={translate('Phone Number')}
-          mask={/^[1-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]{1,2}$|^9999999999$/}
-          minLength={10}
-          name="Number"
-          placeholder="Only number"
-          value={dataModel.phone}
-          onChange={(value) => handleInputChange('phone', value)}
+          label={translate('Address')}
+          value={dataModel.address}
+          onChange={(value) => handleInputChange('address', value)}
         />
         <Input
-          xs={6}
+          xs={12}
           required
           label={translate('Title')}
           value={dataModel.title}
           onChange={(value) => handleInputChange('title', value)}
         />
         <Input
-          xs={6}
+          xs={12}
+          rows={8}
+          multiline
           required
           label={translate('Content')}
           value={dataModel.content}

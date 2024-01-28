@@ -10,7 +10,8 @@ import {
   Input,
   withFormPage,
   Alert,
-  InputFormat
+  InputFormat,
+  Select
 } from 'component/ui';
 
 const uiMetadata = {
@@ -32,6 +33,9 @@ const EditSample = ({ close, id, onSaveSuccess, ...rest }) => {
     phone: rest.data.phone,
     title: rest.data.title,
     content: rest.data.content,
+    status: rest.data.status,
+    referenceID: rest.data.referenceID,
+    createdDate: rest.data.createdDate,
     informationsOwner: null,
     attachments: null,
   });
@@ -59,6 +63,7 @@ const EditSample = ({ close, id, onSaveSuccess, ...rest }) => {
           phone: dataModel.phone,
           title: dataModel.title,
           content: dataModel.content,
+          status: dataModel.status,
           informationsOwner: null,
           attachments: null,
         };
@@ -157,12 +162,16 @@ const EditSample = ({ close, id, onSaveSuccess, ...rest }) => {
           value={dataModel.identificationNo}
           onChange={(value) => handleInputChange('identificationNo', value)}
         />
-        <Input
+        <InputFormat
           xs={6}
           required
-          label={translate('Address')}
-          value={dataModel.address}
-          onChange={(value) => handleInputChange('address', value)}
+          label={translate('Phone Number')}
+          mask={/^[1-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]{1,2}$|^9999999999$/}
+          minLength={10}
+          name="Number"
+          placeholder="Only number"
+          value={dataModel.phone}
+          onChange={(value) => handleInputChange('phone', value)}
         />
         <Input
           xs={6}
@@ -178,26 +187,54 @@ const EditSample = ({ close, id, onSaveSuccess, ...rest }) => {
           value={dataModel.town}
           onChange={(value) => handleInputChange('town', value)}
         />
-        <InputFormat
-          xs={6}
+        <Input
+          xs={8}
           required
-          label={translate('Phone Number')}
-          mask={/^[1-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]?[0-9]{1,2}$|^9999999999$/}
-          minLength={10}
-          name="Number"
-          placeholder="Only number"
-          value={dataModel.phone}
-          onChange={(value) => handleInputChange('phone', value)}
+          label={translate('Address')}
+          value={dataModel.address}
+          onChange={(value) => handleInputChange('address', value)}
+        />
+        <Select
+          datasource={[
+            { label: 'çözüldü', value: 'çözüldü' },
+            { label: 'iptal edildi', value: 'iptal edildi' },
+            { label: 'cevap bekliyor', value: 'cevap bekliyor' },
+          ]}
+          value={dataModel.status}
+          required
+          label={dataModel.status}
+          primaryFilter
+          xs={4}
+          defaultValue={dataModel.status}
+          onChange={(value) => handleInputChange('status', value)}
         />
         <Input
-          xs={6}
+          xs={8}
+          required
+          disabled
+          label={translate('Reference Id')}
+          value={dataModel.referenceID}
+          onChange={(value) => handleInputChange('referenceID', value)}
+        />
+        <Input
+          xs={4}
+          required
+          disabled
+          label={translate('Created Date')}
+          value={dataModel.createdDate}
+          onChange={(value) => handleInputChange('createdDate', value)}
+        />
+        <Input
+          xs={12}
           required
           label={translate('Title')}
           value={dataModel.title}
           onChange={(value) => handleInputChange('title', value)}
         />
         <Input
-          xs={6}
+          rows={8}
+          xs={12}
+          multiline
           required
           label={translate('Content')}
           value={dataModel.content}
